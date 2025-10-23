@@ -67,7 +67,7 @@ azure:
 idam:
   s2s-auth:
     url: ${S2S_URL:http://localhost:4502}
-    secret: ${S2S_SECRET_EUD_BACKEND$:AAAAAAAAAAAAAAAA}
+    secret: ${S2S_SECRET_EUD_BACKEND:AAAAAAAAAAAAAAAA}
     microservice: lau_eud_backend
   api:
     url: ${IDAM_API_URL:http://localhost:5000}
