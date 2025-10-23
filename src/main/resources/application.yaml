@@ -72,7 +72,7 @@ idam:
   api:
     url: ${IDAM_API_URL:http://localhost:5000}
   client:
-    id: lau
+    id: ${IDAM_CLIENT_NAME:lau}
     secret: ${IDAM_CLIENT_SECRET:12345678}
     username: ${IDAM_CLIENT_USERNAME:username}
     password:  ${IDAM_CLIENT_PASSWORD:special!234}

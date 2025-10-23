@@ -24,8 +24,8 @@ public class IdamTokenGenerator {
     private final IdamClient idamClient;
     private final ParameterResolver parameterResolver;
 
-    private String idamClientToken = "token";
-    private String refDataToken = "token";
+    private String idamClientToken = "idamToken";
+    private String refDataToken = "refDataToken";
 
     public String generateIdamToken() {
         try {
