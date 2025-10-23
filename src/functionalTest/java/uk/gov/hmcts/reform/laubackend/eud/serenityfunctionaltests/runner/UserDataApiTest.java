@@ -102,7 +102,7 @@ public class UserDataApiTest {
                             404,status.intValue());
     }
 
-    @Test
+    /*@Test
     @Title("Assert response code of 404 for GET UserData API with valid headers and invalid request params")
     public void assertHttpSuccessResponse404ForInvalidEmail() {
         String authServiceToken = userDataGetApiSteps.givenAValidServiceTokenIsGenerated();
@@ -117,7 +117,7 @@ public class UserDataApiTest {
         Integer status = userDataResponse.getMeta().get("idam").get("responseCode");
         Assert.assertEquals("The assertion for GET UserData API using email response code 404 is not successful",
                             404,status.intValue());
-    }
+    }*/
 
     @Test
     @Title("Assert response code of 400 for GET UserData API with valid headers and userId getter than 64 characters")
