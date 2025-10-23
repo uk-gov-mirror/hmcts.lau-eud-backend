@@ -32,7 +32,7 @@ public class IdamTokenGenerator {
             TokenResponse tokenResponse = idamClient.getToken(
                 parameterResolver.getClientId(),
                 parameterResolver.getClientSecret(),
-                parameterResolver.getRedirectUrl(),
+                 null,
                 IDAM_GRANT_TYPE,
                 IDAM_SCOPE
             );
@@ -51,7 +51,7 @@ public class IdamTokenGenerator {
             TokenResponse tokenResponse = idamClient.getRefDataToken(
                 parameterResolver.getClientId(),
                 parameterResolver.getClientSecret(),
-                parameterResolver.getRedirectUrl(),
+                null,
                 REF_DATA_GRANT_TYPE,
                 REF_DATA_SCOPE,
                 parameterResolver.getUsername(),
