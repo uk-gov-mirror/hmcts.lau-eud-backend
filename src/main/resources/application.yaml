@@ -68,7 +68,7 @@ idam:
   s2s-auth:
     url: ${S2S_URL:http://localhost:4502}
     secret: ${S2S_SECRET_EUD_BACKEND:AAAAAAAAAAAAAAAA}
-    microservice: lau_eud_backend
+    microservice: ${S2S_MICROSERVICE:lau_eud_backend}
   api:
     url: ${IDAM_API_URL:http://localhost:5000}
   client:
@@ -76,7 +76,7 @@ idam:
     secret: ${IDAM_CLIENT_SECRET:12345678}
     username: ${IDAM_CLIENT_USERNAME:username}
     password:  ${IDAM_CLIENT_PASSWORD:special!234}
-    redirect_uri: ${LAU_EUD_REDIRECT_URL:http://localhost:3451/oauth2redirect}
+    redirect_uri: ${IDAM_CLIENT_REDIRECT_URL:http://localhost:3451/oauth2redirect}
 
 rd:
   professional:
