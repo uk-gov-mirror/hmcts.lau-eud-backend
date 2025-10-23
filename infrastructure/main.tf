@@ -137,7 +137,6 @@ resource "azurerm_key_vault_secret" "LAU-SYSTEM-PASSWORD" {
   value        = random_password.password.result
 }
 
-
 ////////////////////////////////
 // S2S Key from RPE Vault
 ///////////////////////////////
