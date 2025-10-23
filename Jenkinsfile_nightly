@@ -22,7 +22,7 @@ def secrets = [
     secret( 'idam-client-secret', 'IDAM_CLIENT_SECRET'),
     secret( 'lau-system-user-username', 'IDAM_CLIENT_USERNAME'),
     secret( 'lau-system-user-password', 'IDAM_CLIENT_PASSWORD'),
-
+    secret( 's2s-secret-lau-eud-backend', 'S2S_SECRET_EUD_BACKEND')
   ]
 ]
 
