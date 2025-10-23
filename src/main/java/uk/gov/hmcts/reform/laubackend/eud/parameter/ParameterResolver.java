@@ -19,4 +19,13 @@ public class ParameterResolver {
     @Value("${idam.client.secret}")
     private String clientSecret;
 
+    @Value("${idam.client.username}")
+    private String username;
+
+    @Value("${idam.client.password}")
+    private String password;
+
+    @Value("${idam.client.redirect_uri}")
+    private String redirectUrl;
+
 }

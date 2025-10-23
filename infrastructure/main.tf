@@ -136,3 +136,24 @@ resource "azurerm_key_vault_secret" "LAU-SYSTEM-PASSWORD" {
   name         = "lau-system-user-password"
   value        = random_password.password.result
 }
+
+
+////////////////////////////////
+// S2S Key from RPE Vault
+///////////////////////////////
+
+data "azurerm_key_vault" "s2s_vault" {
+  name                = "s2s-${var.env}"
+  resource_group_name = "rpe-service-auth-provider-${var.env}"
+}
+
+data "azurerm_key_vault_secret" "key_from_vault" {
+  name         = "microservicekey-lau-eud-backend"
+  key_vault_id = data.azurerm_key_vault.s2s_vault.id
+}
+
+resource "azurerm_key_vault_secret" "s2s" {
+  name         = "s2s-secret-lau-eud-backend"
+  value        = data.azurerm_key_vault_secret.key_from_vault.value
+  key_vault_id = data.azurerm_key_vault.key_vault.id
+}

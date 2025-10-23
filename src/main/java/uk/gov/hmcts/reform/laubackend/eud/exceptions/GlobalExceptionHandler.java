@@ -8,6 +8,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -32,6 +33,18 @@ public class GlobalExceptionHandler {
             errors.put(fe.getField(), fe.getDefaultMessage());
         }
         return errors;
+    }
+
+    @ExceptionHandler(InvalidServiceAuthorizationException.class)
+    public ProblemDetail handleInvalidAuth(InvalidServiceAuthorizationException ex, HttpServletRequest request) {
+        ProblemDetail pd = ProblemDetail.forStatus(HttpStatus.FORBIDDEN);
+        pd.setTitle("Forbidden");
+        pd.setDetail("Invalid service authorization");
+        pd.setProperty("path", request.getRequestURI());
+        Map<String, Object> errorInfo = new HashMap<>();
+        errorInfo.put("reason", "Service token is missing or invalid");
+        pd.setProperty("errors", errorInfo);
+        return pd;
     }
 
 }

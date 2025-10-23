@@ -2,11 +2,23 @@ package uk.gov.hmcts.reform.laubackend.eud.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.laubackend.eud.dto.UserDataGetRequestParams;
+import uk.gov.hmcts.reform.laubackend.eud.response.OrganisationResponse;
+import uk.gov.hmcts.reform.laubackend.eud.response.IdamUserResponse;
 import uk.gov.hmcts.reform.laubackend.eud.response.UserDataResponse;
 import uk.gov.hmcts.reform.laubackend.eud.service.remote.client.IdamClient;
+import uk.gov.hmcts.reform.laubackend.eud.service.remote.client.RefDataClient;
 import uk.gov.hmcts.reform.laubackend.eud.utils.IdamTokenGenerator;
+import uk.gov.hmcts.reform.laubackend.eud.utils.ServiceTokenGenerator;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
+import java.util.function.Supplier;
 
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
@@ -15,15 +27,107 @@ import static org.apache.commons.lang3.StringUtils.isEmpty;
 @RequiredArgsConstructor
 public class UserDataService {
 
-    private final IdamClient client;
+    private final IdamClient idamClient;
     private final IdamTokenGenerator idamTokenGenerator;
+    private final ServiceTokenGenerator serviceTokenGenerator;
+    private final RefDataClient refDataClient;
+    @Qualifier("userDataExecutor")
+    private final Executor executor;
+
+    static final String IDAM = "idam";
+    static final String REF_DATA = "refdata";
 
     public UserDataResponse getUserData(final UserDataGetRequestParams params) {
         boolean hasUserId = !isEmpty(params.getUserId());
-        String token = idamTokenGenerator.generateIdamToken();
+
+        String idamToken = idamTokenGenerator.generateIdamToken();
+        String refDataToken = idamTokenGenerator.generateRefDataToken();
+        String serviceToken = serviceTokenGenerator.generateServiceToken();
+
+        CompletableFuture<CallResult<IdamUserResponse>> idamF;
+        CompletableFuture<CallResult<OrganisationResponse>> refDataF;
+
         if (hasUserId) {
-            return client.getUserDataByUserId(token, params.getUserId().trim());
+            final String userId = params.getUserId().trim();
+            idamF    = callAsync(IDAM, () -> idamClient.getUserDataByUserId(idamToken, userId), executor);
+            refDataF = callAsync(REF_DATA,() -> refDataClient.getOrganisationDetailsByUserId(
+                refDataToken, serviceToken, userId), executor);
+
+        } else {
+            final String email = params.getEmail() == null ? "" : params.getEmail().trim();
+
+            idamF = callAsync(IDAM,    () -> idamClient.getUserDataByEmail(idamToken, email), executor);
+
+            refDataF = idamF.thenCompose(idam -> {
+                if (idam.body != null && idam.body.getUserId() != null && !idam.body.getUserId().isBlank()) {
+                    String userId = idam.body.getUserId().trim();
+                    return callAsync(REF_DATA, () ->
+                    refDataClient.getOrganisationDetailsByUserId(refDataToken, serviceToken, userId), executor);
+                } else {
+                    return CompletableFuture.completedFuture(new CallResult<>(REF_DATA,404, null));
+                }
+            });
+
         }
-        return client.getUserDataByEmail(token, params.getEmail().trim());
+
+        CompletableFuture.allOf(idamF, refDataF).join();
+
+        CallResult<IdamUserResponse> idam = idamF.join();
+        CallResult<OrganisationResponse> ref = refDataF.join();
+
+        // Build final response + minimal meta
+        UserDataResponse response = aggregateResponses(
+            idam.body != null ? idam.body : new IdamUserResponse(),
+            ref.body != null ? ref.body : new OrganisationResponse());
+
+        Map<String, Map<String, Integer>> meta = new LinkedHashMap<>();
+        meta.put(IDAM, Map.of("responseCode", idam.responseCode));
+        meta.put(REF_DATA, Map.of("responseCode", ref.responseCode));
+        response.setMeta(meta);
+
+        return response;
+    }
+
+    private static <T> CompletableFuture<CallResult<T>> callAsync(
+        String source, Supplier<ResponseEntity<T>> call, Executor ex) {
+        return CompletableFuture.supplyAsync(() -> {
+            try {
+                ResponseEntity<T> resp = call.get();
+                int code = (resp != null) ? resp.getStatusCodeValue() : 500;
+                T body = (resp != null) ? resp.getBody() : null;
+                return new CallResult<>(source, code, body);
+            } catch (feign.FeignException fe) {
+                int status = fe.status() > 0 ? fe.status() : 500;
+                log.warn("[{}] FeignException status={} msg={}", source, status, fe.getMessage());
+                return new CallResult<>(source, status, null);
+            } catch (Exception e) {
+                log.warn("[{}] Exception caught: {}", source, e.getMessage());
+                return new CallResult<>(source, 500, null);
+            }
+        }, ex);
+    }
+
+    private static final class CallResult<T> {
+        final String source;
+        final int responseCode;
+        final T body;
+
+        CallResult(String source, int responseCode, T body) {
+            this.source = source;
+            this.responseCode = responseCode;
+            this.body = body;
+        }
+    }
+
+    public UserDataResponse aggregateResponses(IdamUserResponse idamUserData, OrganisationResponse organisation) {
+        UserDataResponse aggregated = new UserDataResponse();
+        aggregated.setUserId(idamUserData.getUserId());
+        aggregated.setEmail(idamUserData.getEmail());
+        aggregated.setAccountStatus(idamUserData.getAccountStatus());
+        aggregated.setRoles(idamUserData.getRoles());
+        aggregated.setAccountCreationDate(idamUserData.getAccountCreationDate());
+        aggregated.setOrganisationalDetails(organisation.getOrganisationalDetails());
+        return aggregated;
     }
 }
+

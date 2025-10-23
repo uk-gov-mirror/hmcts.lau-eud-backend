@@ -19,7 +19,10 @@ def secrets = [
     secret('eud-backend-app-db-password', 'FLYWAY_PLACEHOLDERS_LAU_EUD_DB_PASSWORD'),
     secret('eud-backend-app-db-password', 'LAU_EUD_DB_PASSWORD'),
     secret('eud-backend-encryption-key', 'LAU_EUD_ENCRYPTION_KEY'),
-    secret( 'idam-client-secret', 'IDAM_CLIENT_SECRET')
+    secret( 'idam-client-secret', 'IDAM_CLIENT_SECRET'),
+    secret( 'lau-system-user-username', 'IDAM_CLIENT_USERNAME'),
+    secret( 'lau-system-user-password', 'IDAM_CLIENT_PASSWORD'),
+
   ]
 ]
 

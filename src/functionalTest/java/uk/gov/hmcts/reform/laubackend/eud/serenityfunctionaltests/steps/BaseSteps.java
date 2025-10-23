@@ -11,6 +11,9 @@ import net.serenitybdd.annotations.Step;
 import net.serenitybdd.rest.SerenityRest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import uk.gov.hmcts.reform.laubackend.eud.response.UserDataResponse;
 import uk.gov.hmcts.reform.laubackend.eud.serenityfunctionaltests.helper.AuthorizationHeaderHelper;
 import uk.gov.hmcts.reform.laubackend.eud.serenityfunctionaltests.config.EnvConfig;
 import uk.gov.hmcts.reform.laubackend.eud.serenityfunctionaltests.helper.DatabaseHelper;
@@ -50,10 +53,40 @@ public class BaseSteps {
         return SerenityRest.given(REQSPEC);
     }
 
-    public Response performGetOperation(String endpoint,
-                                        Map<String, String> headers,
-                                        Map<String, String> queryParams,
-                                        String authServiceToken) {
+    public ResponseEntity<UserDataResponse> performGetOperation(String endpoint,
+                                                                Map<String, String> headers,
+                                                                Map<String, String> queryParams,
+                                                 String authServiceToken) {
+
+        RequestSpecification requestSpecification = rest().urlEncodingEnabled(false)
+            .given()
+            .header("ServiceAuthorization", authServiceToken)
+            .header("Content-Type", "application/json");
+
+
+        if (null != headers && !headers.isEmpty()) {
+            for (Map.Entry<String, String> entry : headers.entrySet()) {
+                requestSpecification.header(createHeader(entry.getKey(), entry.getValue()));
+            }
+        }
+
+        if (null != queryParams && !queryParams.isEmpty()) {
+            for (Map.Entry<String, String> entry : queryParams.entrySet()) {
+                requestSpecification.queryParam(entry.getKey(), entry.getValue());
+            }
+        }
+
+        Response response = requestSpecification.get(endpoint)
+            .then()
+            .extract().response();
+        UserDataResponse userDataResponse = response.as(UserDataResponse.class);
+        return new ResponseEntity<>(userDataResponse, HttpStatus.valueOf(response.getStatusCode()));
+    }
+
+    public Response performGetOperationWithInvalidParams(String endpoint,
+                                                                              Map<String, String> headers,
+                                                                              Map<String, String> queryParams,
+                                                                              String authServiceToken) {
 
         RequestSpecification requestSpecification = rest().urlEncodingEnabled(false)
             .given()

@@ -18,18 +18,21 @@ public class IdamTokenGenerator {
     public static final String BEARER = "Bearer ";
     public static final String IDAM_GRANT_TYPE = "client_credentials";
     public static final String IDAM_SCOPE = "view-user";
+    public static final String REF_DATA_GRANT_TYPE = "password";
+    public static final String REF_DATA_SCOPE = "openid profile roles";
 
     private final IdamClient idamClient;
     private final ParameterResolver parameterResolver;
 
     private String idamClientToken = "token";
+    private String refDataToken = "token";
 
     public String generateIdamToken() {
         try {
             TokenResponse tokenResponse = idamClient.getToken(
                 parameterResolver.getClientId(),
                 parameterResolver.getClientSecret(),
-                null,
+                parameterResolver.getRedirectUrl(),
                 IDAM_GRANT_TYPE,
                 IDAM_SCOPE
             );
@@ -41,5 +44,26 @@ public class IdamTokenGenerator {
             throw new IdamAuthTokenGenerationException(msg, exception);
         }
         return BEARER + idamClientToken;
+    }
+
+    public String generateRefDataToken() {
+        try {
+            TokenResponse tokenResponse = idamClient.getRefDataToken(
+                parameterResolver.getClientId(),
+                parameterResolver.getClientSecret(),
+                parameterResolver.getRedirectUrl(),
+                REF_DATA_GRANT_TYPE,
+                REF_DATA_SCOPE,
+                parameterResolver.getUsername(),
+                parameterResolver.getPassword()
+            );
+            refDataToken = tokenResponse.accessToken;
+
+        } catch (final Exception exception) {
+            String msg = String.format("Unable to generate IDAM token due to error - %s", exception.getMessage());
+            log.error(msg, exception);
+            throw new IdamAuthTokenGenerationException(msg, exception);
+        }
+        return BEARER + refDataToken;
     }
 }

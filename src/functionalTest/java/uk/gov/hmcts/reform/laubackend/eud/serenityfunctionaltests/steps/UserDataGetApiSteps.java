@@ -5,6 +5,8 @@ import net.serenitybdd.annotations.Step;
 import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
+import uk.gov.hmcts.reform.laubackend.eud.response.UserDataResponse;
 import uk.gov.hmcts.reform.laubackend.eud.serenityfunctionaltests.model.UserDataResponseVO;
 
 import java.util.Map;
@@ -27,9 +29,16 @@ public class UserDataGetApiSteps extends BaseSteps {
     }
 
     @Step("When the UserData GET service is invoked with the valid params")
-    public Response whenTheGetUserDataIsInvokedWithTheGivenParams(String serviceToken,
-                                                                           Map<String, String> queryParamMap) {
+    public ResponseEntity<UserDataResponse> whenTheGetUserDataIsInvokedWithTheGivenParams(String serviceToken,
+             Map<String, String> queryParamMap) {
         return performGetOperation(USER_DATA_ENDPOINT,
+                                   null, queryParamMap, serviceToken);
+    }
+
+    @Step("When the UserData GET service is invoked with the invalid params")
+    public Response whenTheGetUserDataIsInvokedWithTheInvalidParams(String serviceToken,
+             Map<String, String> queryParamMap) {
+        return performGetOperationWithInvalidParams(USER_DATA_ENDPOINT,
                                    null, queryParamMap, serviceToken);
     }
 
@@ -76,16 +85,16 @@ public class UserDataGetApiSteps extends BaseSteps {
     public String thenBadResponseIsReturned(Response response, int expectedStatusCode) {
         Assert.assertEquals(
             "Response status code is not " + expectedStatusCode + ", but it is " + response.getStatusCode(),
-            expectedStatusCode,response.statusCode()
+            expectedStatusCode,response.getStatusCode()
         );
         return SUCCESS;
     }
 
     @Step("Then a success response is returned")
-    public String thenASuccessResposeIsReturned(Response response) {
+    public String thenASuccessResposeIsReturned(ResponseEntity<UserDataResponse> responseEntity) {
         Assert.assertTrue(
-            "Response status code is not 200, but it is " + response.getStatusCode(),
-            response.statusCode() == 200 || response.statusCode() == 201
+            "Response status code is not 200, but it is " + responseEntity.getStatusCode().value(),
+            responseEntity.getStatusCode().value() == 200 || responseEntity.getStatusCode().value() == 201
         );
         return SUCCESS;
     }

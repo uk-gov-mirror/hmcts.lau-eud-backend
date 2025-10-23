@@ -18,7 +18,10 @@ def secrets = [
                 secret('eud-backend-POSTGRES-PASS', 'FLYWAY_PASSWORD'),
                 secret('eud-backend-app-db-password', 'LAU_EUD_DB_PASSWORD'),
                 secret('eud-backend-encryption-key', 'LAU_EUD_ENCRYPTION_KEY'),
-                secret( 'idam-client-secret', 'IDAM_CLIENT_SECRET')
+                secret( 'idam-client-secret', 'IDAM_CLIENT_SECRET'),
+                secret( 'lau-system-user-username', 'IDAM_CLIENT_USERNAME'),
+                secret( 'lau-system-user-password', 'IDAM_CLIENT_PASSWORD'),
+                secret( 's2s-secret-lau-eud-backend', 'S2S_SECRET_EUD_BACKEND')
         ]
 ]
 

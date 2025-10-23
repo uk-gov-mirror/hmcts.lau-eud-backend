@@ -6,8 +6,10 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import uk.gov.hmcts.reform.laubackend.eud.response.ContactInformationResponse;
 
 import java.util.List;
+import java.util.Map;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Getter
@@ -30,4 +32,10 @@ public class UserDataResponseVO {
 
     @JsonProperty("accountCreationDate")
     private String accountCreationDate;
+
+    @JsonProperty("organisationalDetails")
+    List<ContactInformationResponse> organisationalDetails;
+
+    @JsonProperty("meta")
+    Map<String, Map<String, Integer>> meta;
 }
