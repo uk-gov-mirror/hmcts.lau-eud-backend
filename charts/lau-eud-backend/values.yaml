@@ -41,8 +41,8 @@ java:
         - name: app-insights-connection-string
           alias: app-insights-connection-string
         - name: lau-system-user-password
-          alias: lau-system-user-password
+          alias: IDAM_CLIENT_PASSWORD
         - name: lau-system-user-username
-          alias: lau-system-user-username
+          alias: IDAM_CLIENT_USERNAME
         - name: s2s-secret-lau-eud-backend
-          alias: s2s-secret-lau-eud-backend
+          alias: S2S_SECRET_EUD_BACKEND
