@@ -16,7 +16,7 @@ import java.util.Map;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserDataResponseVO {
+public class UserDataResponseDTO {
 
     @JsonProperty("userId")
     private String userId;
@@ -33,8 +33,8 @@ public class UserDataResponseVO {
     @JsonProperty("accountCreationDate")
     private String accountCreationDate;
 
-    @JsonProperty("organisationalDetails")
-    List<ContactInformationResponse> organisationalDetails;
+    @JsonProperty("organisationalAddress")
+    List<ContactInformationResponse> organisationalAddress;
 
     @JsonProperty("meta")
     Map<String, Map<String, Integer>> meta;

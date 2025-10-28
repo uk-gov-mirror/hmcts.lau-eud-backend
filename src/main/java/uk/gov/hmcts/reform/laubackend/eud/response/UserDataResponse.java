@@ -30,8 +30,8 @@ public class UserDataResponse implements Serializable {
     @Schema(description = "User's roles.")
     List<String> roles;
 
-    @Schema(description = "User Organisation Details")
-    List<ContactInformationResponse> organisationalDetails;
+    @Schema(description = "User Organisation Address")
+    List<ContactInformationResponse> organisationalAddress;
 
     @Schema(description = "Metadata related to the user data response.")
     Map<String, Map<String, Integer>> meta;

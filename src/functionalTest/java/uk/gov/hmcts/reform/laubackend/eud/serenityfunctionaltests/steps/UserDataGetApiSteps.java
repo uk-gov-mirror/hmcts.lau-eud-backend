@@ -7,7 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import uk.gov.hmcts.reform.laubackend.eud.response.UserDataResponse;
-import uk.gov.hmcts.reform.laubackend.eud.serenityfunctionaltests.model.UserDataResponseVO;
+import uk.gov.hmcts.reform.laubackend.eud.serenityfunctionaltests.model.UserDataResponseDTO;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -45,18 +45,18 @@ public class UserDataGetApiSteps extends BaseSteps {
     @SuppressWarnings("PMD.AvoidLiteralsInIfCondition")
     @Step("Then the GET CaseAction response params match the input")
     public String thenTheGetUserDataResponseParamsMatchesTheInput(Map<String, String> inputQueryParamMap,
-                                                                    UserDataResponseVO userDataResponseVO) {
+                                                                    UserDataResponseDTO userDataResponseDTO) {
 
         for (String queryParam : inputQueryParamMap.keySet()) {
 
             if ("userId".equals(queryParam) && !isEmpty(inputQueryParamMap.get(queryParam))) {
-                String userId = userDataResponseVO.getUserId();
+                String userId = userDataResponseDTO.getUserId();
                 Assert.assertEquals(
                     "User Id is missing in the response",
                     inputQueryParamMap.get(queryParam), userId
                 );
             } else if ("email".equals(queryParam) && !isEmpty(inputQueryParamMap.get(queryParam))) {
-                String email = userDataResponseVO.getEmail();
+                String email = userDataResponseDTO.getEmail();
                 Assert.assertEquals(
                     "email is missing in the response",
                     inputQueryParamMap.get(queryParam), email

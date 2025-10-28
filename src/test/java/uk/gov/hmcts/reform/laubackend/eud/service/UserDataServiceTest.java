@@ -81,25 +81,33 @@ class UserDataServiceTest {
         when(params.getUserId()).thenReturn(userId);
         when(params.getEmail()).thenReturn(null);
 
-        IdamUserResponse idamUserResponse = new IdamUserResponse();
-        idamUserResponse.setUserId(userId);
-        idamUserResponse.setEmail("test@test.com");
-        idamUserResponse.setAccountStatus(ACTIVE);
-        idamUserResponse.setRoles(new ArrayList<String>(Arrays.asList(ROLE_1, ROLE_2)));
-
-        OrganisationResponse orgResponse = new OrganisationResponse();
         List<ContactInformationResponse> contactInfoList = new ArrayList<>();
-        ContactInformationResponse contactInfo = new ContactInformationResponse();
-        contactInfo.setAddressLine1("Org details");
+        ContactInformationResponse contactInfo = new ContactInformationResponse(
+            "Org details",
+            "",
+            "",
+            "",
+            "",
+            "",
+            ""
+        );
         contactInfoList.add(contactInfo);
-        orgResponse.setOrganisationalDetails(contactInfoList);
 
         UserDataResponse expectedAggregated = new UserDataResponse();
         expectedAggregated.setUserId(userId);
         expectedAggregated.setEmail("test@test.com");
         expectedAggregated.setRoles(new ArrayList<String>(Arrays.asList(ROLE_1, ROLE_2)));
         expectedAggregated.setAccountStatus(ACTIVE);
-        expectedAggregated.setOrganisationalDetails(contactInfoList);
+        expectedAggregated.setOrganisationalAddress(contactInfoList);
+
+        IdamUserResponse idamUserResponse = new IdamUserResponse(
+            userId,
+            "test@test.com",
+            ACTIVE,
+            null, // accountCreationDate if not needed
+            List.of(ROLE_1, ROLE_2)
+        );
+        OrganisationResponse orgResponse = new OrganisationResponse(contactInfoList);
 
         when(idamTokenGenerator.generateIdamToken()).thenReturn(IDAM_TOKEN);
         when(idamTokenGenerator.generateRefDataToken()).thenReturn(REF_DATA_TOKEN);
@@ -132,32 +140,40 @@ class UserDataServiceTest {
         when(params.getUserId()).thenReturn(null);
         when(params.getEmail()).thenReturn(email);
 
-        IdamUserResponse idamUserResponse = new IdamUserResponse();
-        idamUserResponse.setUserId("14567");
-        idamUserResponse.setEmail("test@example.com");
-        idamUserResponse.setAccountStatus(ACTIVE);
-        idamUserResponse.setRoles(new ArrayList<String>(Arrays.asList(ROLE_1, ROLE_2)));
-
-        OrganisationResponse orgResponse = new OrganisationResponse();
         List<ContactInformationResponse> contactInfoList = new ArrayList<>();
-        ContactInformationResponse contactInfo = new ContactInformationResponse();
-        contactInfo.setAddressLine1("Org details");
+        ContactInformationResponse contactInfo = new ContactInformationResponse(
+            "Org details",
+            "",
+            "",
+            "",
+            "",
+            "",
+            ""
+        );
         contactInfoList.add(contactInfo);
-        orgResponse.setOrganisationalDetails(contactInfoList);
 
         UserDataResponse expectedAggregated = new UserDataResponse();
         expectedAggregated.setUserId("14567");
         expectedAggregated.setEmail("test@example.com");
         expectedAggregated.setRoles(new ArrayList<String>(Arrays.asList(ROLE_1, ROLE_2)));
         expectedAggregated.setAccountStatus(ACTIVE);
-        expectedAggregated.setOrganisationalDetails(contactInfoList);
+        expectedAggregated.setOrganisationalAddress(contactInfoList);
+
+        IdamUserResponse idamUserResponse = new IdamUserResponse(
+            "14567",
+            "test@example.com",
+            ACTIVE,
+            null, // accountCreationDate if not needed
+            List.of(ROLE_1, ROLE_2)
+        );
+        OrganisationResponse orgResponse = new OrganisationResponse(contactInfoList);
 
         when(idamTokenGenerator.generateIdamToken()).thenReturn(IDAM_TOKEN);
         when(idamTokenGenerator.generateRefDataToken()).thenReturn(REF_DATA_TOKEN);
         when(serviceTokenGenerator.generateServiceToken()).thenReturn(SERVICE_TOKEN);
 
         when(idamClient.getUserDataByEmail(IDAM_TOKEN, email)).thenReturn(ResponseEntity.ok(idamUserResponse));
-        when(refDataClient.getOrganisationDetailsByUserId(REF_DATA_TOKEN, SERVICE_TOKEN, idamUserResponse.getUserId()))
+        when(refDataClient.getOrganisationDetailsByUserId(REF_DATA_TOKEN, SERVICE_TOKEN, idamUserResponse.userId()))
             .thenReturn(ResponseEntity.ok(orgResponse));
 
         UserDataResponse actualResponse = userDataService.getUserData(params);
@@ -198,7 +214,7 @@ class UserDataServiceTest {
         assertNull(actualResponse.getEmail());
         assertNull(actualResponse.getAccountStatus());
         assertNull(actualResponse.getRoles());
-        assertNull(actualResponse.getOrganisationalDetails());
+        assertNull(actualResponse.getOrganisationalAddress());
 
         Map<String, Map<String, Integer>> meta = actualResponse.getMeta();
         assertNotNull(meta);
@@ -229,7 +245,7 @@ class UserDataServiceTest {
         assertNull(actualResponse.getEmail());
         assertNull(actualResponse.getAccountStatus());
         assertNull(actualResponse.getRoles());
-        assertNull(actualResponse.getOrganisationalDetails());
+        assertNull(actualResponse.getOrganisationalAddress());
 
         Map<String, Map<String, Integer>> meta = actualResponse.getMeta();
         assertNotNull(meta);
@@ -243,6 +259,6 @@ class UserDataServiceTest {
         assertEquals(expected.getEmail(), actual.getEmail());
         assertEquals(expected.getRoles(), actual.getRoles());
         assertEquals(expected.getAccountStatus(), actual.getAccountStatus());
-        assertEquals(expected.getOrganisationalDetails(), actual.getOrganisationalDetails());
+        assertEquals(expected.getOrganisationalAddress(), actual.getOrganisationalAddress());
     }
 }

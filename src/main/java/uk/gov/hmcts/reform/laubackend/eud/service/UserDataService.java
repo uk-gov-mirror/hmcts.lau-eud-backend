@@ -20,8 +20,6 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 import java.util.function.Supplier;
 
-import static org.apache.commons.lang3.StringUtils.isEmpty;
-
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -38,7 +36,7 @@ public class UserDataService {
     static final String REF_DATA = "refdata";
 
     public UserDataResponse getUserData(final UserDataGetRequestParams params) {
-        boolean hasUserId = !isEmpty(params.getUserId());
+        boolean hasUserId = params.getUserId() != null && !params.getUserId().trim().isEmpty();
 
         String idamToken = idamTokenGenerator.generateIdamToken();
         String refDataToken = idamTokenGenerator.generateRefDataToken();
@@ -59,26 +57,27 @@ public class UserDataService {
             idamF = callAsync(IDAM,    () -> idamClient.getUserDataByEmail(idamToken, email), executor);
 
             refDataF = idamF.thenCompose(idam -> {
-                if (idam.body != null && idam.body.getUserId() != null && !idam.body.getUserId().isBlank()) {
-                    String userId = idam.body.getUserId().trim();
-                    return callAsync(REF_DATA, () ->
-                    refDataClient.getOrganisationDetailsByUserId(refDataToken, serviceToken, userId), executor);
-                } else {
-                    return CompletableFuture.completedFuture(new CallResult<>(REF_DATA,404, null));
+                var body = idam.body;
+                var userId = body != null ? body.userId() : null;
+
+                if (userId != null && !userId.isBlank()) {
+                    var trimmed = userId.trim();
+                    return callAsync(REF_DATA,
+                        () -> refDataClient.getOrganisationDetailsByUserId(refDataToken, serviceToken, trimmed),
+                                     executor);
                 }
+                return CompletableFuture.completedFuture(new CallResult<>(REF_DATA, 404, null));
             });
 
         }
-
-        CompletableFuture.allOf(idamF, refDataF).join();
 
         CallResult<IdamUserResponse> idam = idamF.join();
         CallResult<OrganisationResponse> ref = refDataF.join();
 
         // Build final response + minimal meta
         UserDataResponse response = aggregateResponses(
-            idam.body != null ? idam.body : new IdamUserResponse(),
-            ref.body != null ? ref.body : new OrganisationResponse());
+            idam.body != null ? idam.body : IdamUserResponse.empty(),
+            ref.body != null ? ref.body : new OrganisationResponse(null));
 
         Map<String, Map<String, Integer>> meta = new LinkedHashMap<>();
         meta.put(IDAM, Map.of("responseCode", idam.responseCode));
@@ -121,12 +120,12 @@ public class UserDataService {
 
     public UserDataResponse aggregateResponses(IdamUserResponse idamUserData, OrganisationResponse organisation) {
         UserDataResponse aggregated = new UserDataResponse();
-        aggregated.setUserId(idamUserData.getUserId());
-        aggregated.setEmail(idamUserData.getEmail());
-        aggregated.setAccountStatus(idamUserData.getAccountStatus());
-        aggregated.setRoles(idamUserData.getRoles());
-        aggregated.setAccountCreationDate(idamUserData.getAccountCreationDate());
-        aggregated.setOrganisationalDetails(organisation.getOrganisationalDetails());
+        aggregated.setUserId(idamUserData.userId());
+        aggregated.setEmail(idamUserData.email());
+        aggregated.setAccountStatus(idamUserData.accountStatus());
+        aggregated.setRoles(idamUserData.roles());
+        aggregated.setAccountCreationDate(idamUserData.accountCreationDate());
+        aggregated.setOrganisationalAddress(organisation.organisationalAddress());
         return aggregated;
     }
 }
