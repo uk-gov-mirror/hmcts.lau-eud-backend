@@ -74,15 +74,14 @@ public class UserDataService {
         CallResult<IdamUserResponse> idam = idamF.join();
         CallResult<OrganisationResponse> ref = refDataF.join();
 
-        // Build final response + minimal meta
-        UserDataResponse response = aggregateResponses(
-            idam.body != null ? idam.body : IdamUserResponse.empty(),
-            ref.body != null ? ref.body : new OrganisationResponse(null));
-
         Map<String, Map<String, Integer>> meta = new LinkedHashMap<>();
         meta.put(IDAM, Map.of("responseCode", idam.responseCode));
         meta.put(REF_DATA, Map.of("responseCode", ref.responseCode));
-        response.setMeta(meta);
+
+        // Build final response + minimal meta
+        UserDataResponse response = aggregateResponses(
+            idam.body != null ? idam.body : IdamUserResponse.empty(),
+            ref.body != null ? ref.body : new OrganisationResponse(null),meta);
 
         return response;
     }
@@ -106,18 +105,20 @@ public class UserDataService {
         }, ex);
     }
 
-    private static record CallResult<T>(String source, int responseCode, T body) {}
+    private record CallResult<T>(String source, int responseCode, T body) {}
 
     private static UserDataResponse aggregateResponses(IdamUserResponse idamUserData,
-                                                       OrganisationResponse organisation) {
-        UserDataResponse aggregated = new UserDataResponse();
-        aggregated.setUserId(idamUserData.userId());
-        aggregated.setEmail(idamUserData.email());
-        aggregated.setAccountStatus(idamUserData.accountStatus());
-        aggregated.setRoles(idamUserData.roles());
-        aggregated.setAccountCreationDate(idamUserData.accountCreationDate());
-        aggregated.setOrganisationalAddress(organisation.organisationalAddress());
-        return aggregated;
+                                                       OrganisationResponse organisation,
+                                                       Map<String, Map<String, Integer>> meta) {
+        return new UserDataResponse(
+            idamUserData.userId(),
+            idamUserData.email(),
+            idamUserData.accountStatus(),
+            idamUserData.accountCreationDate(),
+            idamUserData.roles(),
+            organisation.organisationalAddress(),
+            meta
+        );
     }
 }
 

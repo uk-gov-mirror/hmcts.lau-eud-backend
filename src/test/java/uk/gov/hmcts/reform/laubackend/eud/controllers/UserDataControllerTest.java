@@ -34,11 +34,15 @@ class UserDataControllerTest {
 
     @Test
     void shouldReturnUserDataWhenRequestIsValid() {
-        UserDataResponse expectedResponse = new UserDataResponse();
-        expectedResponse.setUserId("1234");
-        expectedResponse.setEmail("test@test.com");
-        expectedResponse.setRoles(new ArrayList<String>(Arrays.asList("role1", "role2")));
-        expectedResponse.setAccountStatus("ACTIVE");
+        UserDataResponse expectedResponse = new UserDataResponse(
+            "1234",
+            "test@test.com",
+            "ACTIVE",
+            null,
+            new ArrayList<String>(Arrays.asList("role1", "role2")),
+            null,
+            null
+        );
 
         UserDataGetRequestParams requestParams = new UserDataGetRequestParams("1234","test@test.com");
         String authToken = "Bearer valid-token";
@@ -48,7 +52,7 @@ class UserDataControllerTest {
         ResponseEntity<UserDataResponse> response = userDataController.getUserData(authToken, requestParams);
 
         assertNotNull(response);
-        assertEquals(200, response.getStatusCodeValue());
+        assertEquals(200, response.getStatusCode().value());
         assertEquals(expectedResponse, response.getBody());
         verify(userDataService, times(1)).getUserData(requestParams);
     }

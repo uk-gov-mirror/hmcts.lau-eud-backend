@@ -93,13 +93,6 @@ class UserDataServiceTest {
         );
         contactInfoList.add(contactInfo);
 
-        UserDataResponse expectedAggregated = new UserDataResponse();
-        expectedAggregated.setUserId(userId);
-        expectedAggregated.setEmail("test@test.com");
-        expectedAggregated.setRoles(new ArrayList<String>(Arrays.asList(ROLE_1, ROLE_2)));
-        expectedAggregated.setAccountStatus(ACTIVE);
-        expectedAggregated.setOrganisationalAddress(contactInfoList);
-
         IdamUserResponse idamUserResponse = new IdamUserResponse(
             userId,
             "test@test.com",
@@ -119,9 +112,19 @@ class UserDataServiceTest {
 
         UserDataResponse actualResponse = userDataService.getUserData(params);
 
+        UserDataResponse expectedAggregated = new UserDataResponse(
+            userId,
+            "test@test.com",
+            ACTIVE,
+            null,
+            new ArrayList<String>(Arrays.asList(ROLE_1, ROLE_2)),
+            contactInfoList,
+            null
+        );
+
         assertNotNull(actualResponse);
         assertUserDataResponseEquals(expectedAggregated, actualResponse);
-        Map<String, Map<String, Integer>> meta = actualResponse.getMeta();
+        Map<String, Map<String, Integer>> meta = actualResponse.meta();
         assertNotNull(meta);
         assertEquals(200, meta.get(IDAM).get(RESPONSE_CODE));
         assertEquals(200, meta.get(REF_DATA).get(RESPONSE_CODE));
@@ -152,13 +155,6 @@ class UserDataServiceTest {
         );
         contactInfoList.add(contactInfo);
 
-        UserDataResponse expectedAggregated = new UserDataResponse();
-        expectedAggregated.setUserId("14567");
-        expectedAggregated.setEmail("test@example.com");
-        expectedAggregated.setRoles(new ArrayList<String>(Arrays.asList(ROLE_1, ROLE_2)));
-        expectedAggregated.setAccountStatus(ACTIVE);
-        expectedAggregated.setOrganisationalAddress(contactInfoList);
-
         IdamUserResponse idamUserResponse = new IdamUserResponse(
             "14567",
             "test@example.com",
@@ -178,11 +174,20 @@ class UserDataServiceTest {
 
         UserDataResponse actualResponse = userDataService.getUserData(params);
 
+        UserDataResponse expectedAggregated = new UserDataResponse(
+            "14567",
+            "test@example.com",
+            ACTIVE,
+            null,
+            new ArrayList<String>(Arrays.asList(ROLE_1, ROLE_2)),
+            contactInfoList,
+            null
+        );
+
         assertNotNull(actualResponse);
         assertUserDataResponseEquals(expectedAggregated, actualResponse);
 
-
-        Map<String, Map<String, Integer>> meta = actualResponse.getMeta();
+        Map<String, Map<String, Integer>> meta = actualResponse.meta();
         assertNotNull(meta);
         assertEquals(200, meta.get(IDAM).get(RESPONSE_CODE));
         assertEquals(200, meta.get(REF_DATA).get(RESPONSE_CODE));
@@ -210,13 +215,13 @@ class UserDataServiceTest {
         UserDataResponse actualResponse = userDataService.getUserData(params);
 
         assertNotNull(actualResponse);
-        assertNull(actualResponse.getUserId());
-        assertNull(actualResponse.getEmail());
-        assertNull(actualResponse.getAccountStatus());
-        assertNull(actualResponse.getRoles());
-        assertNull(actualResponse.getOrganisationalAddress());
+        assertNull(actualResponse.userId());
+        assertNull(actualResponse.email());
+        assertNull(actualResponse.accountStatus());
+        assertNull(actualResponse.roles());
+        assertNull(actualResponse.organisationalAddress());
 
-        Map<String, Map<String, Integer>> meta = actualResponse.getMeta();
+        Map<String, Map<String, Integer>> meta = actualResponse.meta();
         assertNotNull(meta);
         assertEquals(200, meta.get(IDAM).get(RESPONSE_CODE));
         assertEquals(200, meta.get(REF_DATA).get(RESPONSE_CODE));
@@ -241,13 +246,13 @@ class UserDataServiceTest {
 
 
         assertNotNull(actualResponse);
-        assertNull(actualResponse.getUserId());
-        assertNull(actualResponse.getEmail());
-        assertNull(actualResponse.getAccountStatus());
-        assertNull(actualResponse.getRoles());
-        assertNull(actualResponse.getOrganisationalAddress());
+        assertNull(actualResponse.userId());
+        assertNull(actualResponse.email());
+        assertNull(actualResponse.accountStatus());
+        assertNull(actualResponse.roles());
+        assertNull(actualResponse.organisationalAddress());
 
-        Map<String, Map<String, Integer>> meta = actualResponse.getMeta();
+        Map<String, Map<String, Integer>> meta = actualResponse.meta();
         assertNotNull(meta);
         assertEquals(500, meta.get(IDAM).get(RESPONSE_CODE));
         assertEquals(500, meta.get(REF_DATA).get(RESPONSE_CODE));
@@ -255,10 +260,10 @@ class UserDataServiceTest {
     }
 
     private void assertUserDataResponseEquals(UserDataResponse expected, UserDataResponse actual) {
-        assertEquals(expected.getUserId(), actual.getUserId());
-        assertEquals(expected.getEmail(), actual.getEmail());
-        assertEquals(expected.getRoles(), actual.getRoles());
-        assertEquals(expected.getAccountStatus(), actual.getAccountStatus());
-        assertEquals(expected.getOrganisationalAddress(), actual.getOrganisationalAddress());
+        assertEquals(expected.userId(), actual.userId());
+        assertEquals(expected.email(), actual.email());
+        assertEquals(expected.roles(), actual.roles());
+        assertEquals(expected.accountStatus(), actual.accountStatus());
+        assertEquals(expected.organisationalAddress(), actual.organisationalAddress());
     }
 }

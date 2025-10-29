@@ -96,7 +96,7 @@ public class UserDataApiTest {
             queryParamMap
         );
         UserDataResponse userDataResponse = responseEntity.getBody();
-        Integer status = userDataResponse.getMeta().get("idam").get("responseCode");
+        Integer status = userDataResponse.meta().get("idam").get("responseCode");
         Assert.assertEquals("The assertion for GET UserData API using userId response code 404 is not successful",
                             404,status.intValue());
     }
@@ -113,7 +113,7 @@ public class UserDataApiTest {
             queryParamMap
         );
         UserDataResponse userDataResponse = responseEntity.getBody();
-        Integer status = userDataResponse.getMeta().get("idam").get("responseCode");
+        Integer status = userDataResponse.meta().get("idam").get("responseCode");
         Assert.assertEquals("The assertion for GET UserData API using email response code 404 is not successful",
                             404,status.intValue());
     }

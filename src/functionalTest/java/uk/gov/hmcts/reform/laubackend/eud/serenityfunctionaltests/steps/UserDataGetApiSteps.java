@@ -49,13 +49,13 @@ public class UserDataGetApiSteps extends BaseSteps {
         for (String queryParam : inputQueryParamMap.keySet()) {
 
             if ("userId".equals(queryParam) && !isEmpty(inputQueryParamMap.get(queryParam))) {
-                String userId = actualResponse.getUserId();
+                String userId = actualResponse.userId();
                 Assert.assertEquals(
                     "User Id is missing in the response",
                     inputQueryParamMap.get(queryParam), userId
                 );
             } else if ("email".equals(queryParam) && !isEmpty(inputQueryParamMap.get(queryParam))) {
-                String email = actualResponse.getEmail();
+                String email = actualResponse.email();
                 Assert.assertEquals(
                     "email is missing in the response",
                     inputQueryParamMap.get(queryParam), email

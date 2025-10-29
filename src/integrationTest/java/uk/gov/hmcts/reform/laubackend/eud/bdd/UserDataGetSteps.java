@@ -39,16 +39,16 @@ public class UserDataGetSteps extends AbstractSteps {
 
     private void assertObject(final UserDataResponse userDataResponse) {
         assertThat(userDataResponse).isNotNull();
-        assertThat(userDataResponse.getUserId())
+        assertThat(userDataResponse.userId())
             .isEqualTo("13e31622-edea-493c-8240-9b780c9d6111");
-        assertThat(userDataResponse.getEmail())
+        assertThat(userDataResponse.email())
             .isEqualTo("john111.smith111@example.org");
-        assertThat(userDataResponse.getAccountStatus())
+        assertThat(userDataResponse.accountStatus())
             .isEqualTo("ACTIVE");
         String[] roles = {"citizen","caseworker-civil"};
-        assertThat(userDataResponse.getRoles())
+        assertThat(userDataResponse.roles())
             .isEqualTo(List.of(roles));
-        assertThat(userDataResponse.getAccountCreationDate())
+        assertThat(userDataResponse.accountCreationDate())
             .isEqualTo("2023-06-21T13:28:40.966619Z");
     }
 }
