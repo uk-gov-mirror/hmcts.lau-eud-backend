@@ -100,25 +100,16 @@ public class UserDataService {
                 log.warn("[{}] FeignException status={} msg={}", source, status, fe.getMessage());
                 return new CallResult<>(source, status, null);
             } catch (Exception e) {
-                log.warn("[{}] Exception caught: {}", source, e.getMessage());
+                log.warn("[{}] Exception caught: {}", source, e.getMessage(),e);
                 return new CallResult<>(source, 500, null);
             }
         }, ex);
     }
 
-    private static final class CallResult<T> {
-        final String source;
-        final int responseCode;
-        final T body;
+    private static record CallResult<T>(String source, int responseCode, T body) {}
 
-        CallResult(String source, int responseCode, T body) {
-            this.source = source;
-            this.responseCode = responseCode;
-            this.body = body;
-        }
-    }
-
-    public UserDataResponse aggregateResponses(IdamUserResponse idamUserData, OrganisationResponse organisation) {
+    private static UserDataResponse aggregateResponses(IdamUserResponse idamUserData,
+                                                       OrganisationResponse organisation) {
         UserDataResponse aggregated = new UserDataResponse();
         aggregated.setUserId(idamUserData.userId());
         aggregated.setEmail(idamUserData.email());
