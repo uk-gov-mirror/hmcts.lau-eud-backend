@@ -9,8 +9,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.http.ResponseEntity;
-import uk.gov.hmcts.reform.laubackend.eud.response.UserDataResponse;
-import uk.gov.hmcts.reform.laubackend.eud.serenityfunctionaltests.model.UserDataResponseDTO;
+import uk.gov.hmcts.reform.laubackend.eud.serenityfunctionaltests.model.UserDataResponse;
 import uk.gov.hmcts.reform.laubackend.eud.serenityfunctionaltests.steps.UserDataGetApiSteps;
 import uk.gov.hmcts.reform.laubackend.eud.serenityfunctionaltests.utils.TestConstants;
 
@@ -38,12 +37,12 @@ public class UserDataApiTest {
         );
 
         ObjectMapper objectMapper = new ObjectMapper();
-        UserDataResponseDTO userDataResponseDTO = objectMapper.convertValue(
+        UserDataResponse actualResponse = objectMapper.convertValue(
             responseEntity.getBody(),
-            UserDataResponseDTO.class
+            UserDataResponse.class
         );
 
-        userDataGetApiSteps.thenTheGetUserDataResponseParamsMatchesTheInput(queryParamMap, userDataResponseDTO);
+        userDataGetApiSteps.thenTheGetUserDataResponseParamsMatchesTheInput(queryParamMap, actualResponse);
         String successOrFailure = userDataGetApiSteps.thenASuccessResposeIsReturned(responseEntity);
         Assert.assertEquals("The assertion for GET UserData API response code 200 is not successful",
                             TestConstants.SUCCESS,successOrFailure);

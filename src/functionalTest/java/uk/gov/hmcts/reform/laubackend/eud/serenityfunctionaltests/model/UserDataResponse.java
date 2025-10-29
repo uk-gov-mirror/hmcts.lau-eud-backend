@@ -16,7 +16,7 @@ import java.util.Map;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserDataResponseDTO {
+public class UserDataResponse {
 
     @JsonProperty("userId")
     private String userId;

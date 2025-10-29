@@ -13,7 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import uk.gov.hmcts.reform.laubackend.eud.response.UserDataResponse;
+import uk.gov.hmcts.reform.laubackend.eud.serenityfunctionaltests.model.UserDataResponse;
 import uk.gov.hmcts.reform.laubackend.eud.serenityfunctionaltests.helper.AuthorizationHeaderHelper;
 import uk.gov.hmcts.reform.laubackend.eud.serenityfunctionaltests.config.EnvConfig;
 import uk.gov.hmcts.reform.laubackend.eud.serenityfunctionaltests.helper.DatabaseHelper;
