@@ -1,4 +1,4 @@
-package uk.gov.hmcts.reform.laubackend.eud.serenityfunctionaltests.helper;
+package uk.gov.hmcts.reform.laubackend.eud.functionaltests.helper;
 
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
@@ -9,7 +9,7 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static uk.gov.hmcts.reform.laubackend.eud.serenityfunctionaltests.utils.TestConstants.TESTING_SUPPORT_ACCOUNTS_URL;
+import static uk.gov.hmcts.reform.laubackend.eud.functionaltests.utils.TestConstants.TESTING_SUPPORT_ACCOUNTS_URL;
 
 public class DatabaseHelper extends AuthorizationHeaderHelper {
 

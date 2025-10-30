@@ -1,4 +1,4 @@
-package uk.gov.hmcts.reform.laubackend.eud.serenityfunctionaltests.runner;
+package uk.gov.hmcts.reform.laubackend.eud.functionaltests.runner;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.response.Response;
@@ -9,9 +9,9 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.http.ResponseEntity;
-import uk.gov.hmcts.reform.laubackend.eud.serenityfunctionaltests.model.UserDataResponse;
-import uk.gov.hmcts.reform.laubackend.eud.serenityfunctionaltests.steps.UserDataGetApiSteps;
-import uk.gov.hmcts.reform.laubackend.eud.serenityfunctionaltests.utils.TestConstants;
+import uk.gov.hmcts.reform.laubackend.eud.functionaltests.model.UserDataResponse;
+import uk.gov.hmcts.reform.laubackend.eud.functionaltests.steps.UserDataGetApiSteps;
+import uk.gov.hmcts.reform.laubackend.eud.functionaltests.utils.TestConstants;
 
 import java.util.Map;
 

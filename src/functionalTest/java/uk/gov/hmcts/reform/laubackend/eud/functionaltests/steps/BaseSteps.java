@@ -1,4 +1,4 @@
-package uk.gov.hmcts.reform.laubackend.eud.serenityfunctionaltests.steps;
+package uk.gov.hmcts.reform.laubackend.eud.functionaltests.steps;
 
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.config.EncoderConfig;
@@ -13,10 +13,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import uk.gov.hmcts.reform.laubackend.eud.serenityfunctionaltests.model.UserDataResponse;
-import uk.gov.hmcts.reform.laubackend.eud.serenityfunctionaltests.helper.AuthorizationHeaderHelper;
-import uk.gov.hmcts.reform.laubackend.eud.serenityfunctionaltests.config.EnvConfig;
-import uk.gov.hmcts.reform.laubackend.eud.serenityfunctionaltests.helper.DatabaseHelper;
+import uk.gov.hmcts.reform.laubackend.eud.functionaltests.model.UserDataResponse;
+import uk.gov.hmcts.reform.laubackend.eud.functionaltests.helper.AuthorizationHeaderHelper;
+import uk.gov.hmcts.reform.laubackend.eud.functionaltests.config.EnvConfig;
+import uk.gov.hmcts.reform.laubackend.eud.functionaltests.helper.DatabaseHelper;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Map;

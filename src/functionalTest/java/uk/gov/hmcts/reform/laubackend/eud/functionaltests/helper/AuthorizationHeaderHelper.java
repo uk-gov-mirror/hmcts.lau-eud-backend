@@ -1,4 +1,4 @@
-package uk.gov.hmcts.reform.laubackend.eud.serenityfunctionaltests.helper;
+package uk.gov.hmcts.reform.laubackend.eud.functionaltests.helper;
 
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
@@ -13,13 +13,13 @@ import static com.google.common.collect.ImmutableMap.of;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
-import static uk.gov.hmcts.reform.laubackend.eud.serenityfunctionaltests.config.EnvConfig.IDAM_CLIENT_SECRET;
-import static uk.gov.hmcts.reform.laubackend.eud.serenityfunctionaltests.utils.TestConstants.CLIENT_ID;
-import static uk.gov.hmcts.reform.laubackend.eud.serenityfunctionaltests.utils.TestConstants.GRANT_TYPE;
-import static uk.gov.hmcts.reform.laubackend.eud.serenityfunctionaltests.utils.TestConstants.S2S_NAME;
-import static uk.gov.hmcts.reform.laubackend.eud.serenityfunctionaltests.utils.TestConstants.S2S_URL;
-import static uk.gov.hmcts.reform.laubackend.eud.serenityfunctionaltests.utils.TestConstants.TOKEN_URL;
-import static uk.gov.hmcts.reform.laubackend.eud.serenityfunctionaltests.utils.TestConstants.USER_SCOPE;
+import static uk.gov.hmcts.reform.laubackend.eud.functionaltests.config.EnvConfig.IDAM_CLIENT_SECRET;
+import static uk.gov.hmcts.reform.laubackend.eud.functionaltests.utils.TestConstants.CLIENT_ID;
+import static uk.gov.hmcts.reform.laubackend.eud.functionaltests.utils.TestConstants.GRANT_TYPE;
+import static uk.gov.hmcts.reform.laubackend.eud.functionaltests.utils.TestConstants.S2S_NAME;
+import static uk.gov.hmcts.reform.laubackend.eud.functionaltests.utils.TestConstants.S2S_URL;
+import static uk.gov.hmcts.reform.laubackend.eud.functionaltests.utils.TestConstants.TOKEN_URL;
+import static uk.gov.hmcts.reform.laubackend.eud.functionaltests.utils.TestConstants.USER_SCOPE;
 
 public class AuthorizationHeaderHelper {
 

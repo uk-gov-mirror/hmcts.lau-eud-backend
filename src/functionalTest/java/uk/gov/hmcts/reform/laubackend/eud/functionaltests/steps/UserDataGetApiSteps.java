@@ -1,4 +1,4 @@
-package uk.gov.hmcts.reform.laubackend.eud.serenityfunctionaltests.steps;
+package uk.gov.hmcts.reform.laubackend.eud.functionaltests.steps;
 
 import io.restassured.response.Response;
 import net.serenitybdd.annotations.Step;
@@ -6,14 +6,14 @@ import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
-import uk.gov.hmcts.reform.laubackend.eud.serenityfunctionaltests.model.UserDataResponse;
+import uk.gov.hmcts.reform.laubackend.eud.functionaltests.model.UserDataResponse;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static org.apache.commons.lang3.StringUtils.isEmpty;
-import static uk.gov.hmcts.reform.laubackend.eud.serenityfunctionaltests.utils.TestConstants.SUCCESS;
-import static uk.gov.hmcts.reform.laubackend.eud.serenityfunctionaltests.utils.TestConstants.USER_DATA_ENDPOINT;
+import static uk.gov.hmcts.reform.laubackend.eud.functionaltests.utils.TestConstants.SUCCESS;
+import static uk.gov.hmcts.reform.laubackend.eud.functionaltests.utils.TestConstants.USER_DATA_ENDPOINT;
 
 public class UserDataGetApiSteps extends BaseSteps {
 

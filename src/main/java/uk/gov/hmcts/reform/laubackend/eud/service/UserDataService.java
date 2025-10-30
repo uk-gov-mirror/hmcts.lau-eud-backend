@@ -78,12 +78,10 @@ public class UserDataService {
         meta.put(IDAM, Map.of("responseCode", idam.responseCode));
         meta.put(REF_DATA, Map.of("responseCode", ref.responseCode));
 
-        // Build final response + minimal meta
-        UserDataResponse response = aggregateResponses(
+        // Build final response + minimal meta and return
+        return aggregateResponses(
             idam.body != null ? idam.body : IdamUserResponse.empty(),
             ref.body != null ? ref.body : new OrganisationResponse(null),meta);
-
-        return response;
     }
 
     private static <T> CompletableFuture<CallResult<T>> callAsync(
@@ -91,7 +89,7 @@ public class UserDataService {
         return CompletableFuture.supplyAsync(() -> {
             try {
                 ResponseEntity<T> resp = call.get();
-                int code = (resp != null) ? resp.getStatusCodeValue() : 500;
+                int code = (resp != null) ? resp.getStatusCode().value() : 500;
                 T body = (resp != null) ? resp.getBody() : null;
                 return new CallResult<>(source, code, body);
             } catch (feign.FeignException fe) {

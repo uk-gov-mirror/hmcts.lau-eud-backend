@@ -1,4 +1,4 @@
-package uk.gov.hmcts.reform.laubackend.eud.serenityfunctionaltests.utils;
+package uk.gov.hmcts.reform.laubackend.eud.functionaltests.utils;
 
 @SuppressWarnings("PMD.TestClassWithoutTestCases")
 public final class TestConstants {

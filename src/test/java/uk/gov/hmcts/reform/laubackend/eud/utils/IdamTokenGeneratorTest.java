@@ -21,10 +21,13 @@ import static org.mockito.Mockito.when;
 
 class IdamTokenGeneratorTest {
 
-    public static final String TEST_CLIENT_SECRET = "test-client-secret";
-    public static final String TEST_CLIENT_ID = "test-client-id";
-    public static final String CLIENT_CREDENTIALS = "client_credentials";
-    public static final String VIEW_USER = "view-user";
+    private static final String TEST_CLIENT_SECRET = "test-client-secret";
+    private static final String TEST_CLIENT_ID = "test-client-id";
+    private static final String CLIENT_CREDENTIALS = "client_credentials";
+    private static final String VIEW_USER = "view-user";
+    private static final String TEST_USER = "test-user";
+    private static final String TEST_PASS = "test-pass";
+
     @Mock
     private IdamClient idamClient;
 
@@ -87,4 +90,91 @@ class IdamTokenGeneratorTest {
         verify(idamClient, times(1)).getToken(TEST_CLIENT_ID, TEST_CLIENT_SECRET,
             null, CLIENT_CREDENTIALS, VIEW_USER);
     }
+
+    @Test
+    void shouldGenerateRefDataTokenSuccessfully() {
+        String accessToken = "mock-refdata-token";
+        TokenResponse tokenResponse = new TokenResponse(
+            accessToken,
+            null,
+            null,
+            null,
+            null,
+            null
+        );
+
+        when(parameterResolver.getClientId()).thenReturn(TEST_CLIENT_ID);
+        when(parameterResolver.getClientSecret()).thenReturn(TEST_CLIENT_SECRET);
+        when(parameterResolver.getRedirectUrl()).thenReturn(null);
+        when(parameterResolver.getUsername()).thenReturn(TEST_USER);
+        when(parameterResolver.getPassword()).thenReturn(TEST_PASS);
+        when(idamClient.getRefDataToken(
+            TEST_CLIENT_ID,
+            TEST_CLIENT_SECRET,
+            null,
+            IdamTokenGenerator.REF_DATA_GRANT_TYPE,
+            IdamTokenGenerator.REF_DATA_SCOPE,
+            TEST_USER,
+            TEST_PASS
+        )).thenReturn(tokenResponse);
+
+        String token = idamTokenGenerator.generateRefDataToken();
+
+        assertNotNull(token);
+        assertEquals("Bearer " + accessToken, token);
+        verify(parameterResolver).getClientId();
+        verify(parameterResolver).getClientSecret();
+        verify(parameterResolver).getRedirectUrl();
+        verify(parameterResolver).getUsername();
+        verify(parameterResolver).getPassword();
+        verify(idamClient).getRefDataToken(
+            TEST_CLIENT_ID,
+            TEST_CLIENT_SECRET,
+            null,
+            IdamTokenGenerator.REF_DATA_GRANT_TYPE,
+            IdamTokenGenerator.REF_DATA_SCOPE,
+            TEST_USER,
+            TEST_PASS
+        );
+    }
+
+    @Test
+    void shouldThrowExceptionWhenRefDataTokenGenerationFails() {
+        when(parameterResolver.getClientId()).thenReturn(TEST_CLIENT_ID);
+        when(parameterResolver.getClientSecret()).thenReturn(TEST_CLIENT_SECRET);
+        when(parameterResolver.getRedirectUrl()).thenReturn(null);
+        when(parameterResolver.getUsername()).thenReturn(TEST_USER);
+        when(parameterResolver.getPassword()).thenReturn(TEST_PASS);
+        when(idamClient.getRefDataToken(
+            TEST_CLIENT_ID,
+            TEST_CLIENT_SECRET,
+            null,
+            IdamTokenGenerator.REF_DATA_GRANT_TYPE,
+            IdamTokenGenerator.REF_DATA_SCOPE,
+            TEST_USER,
+            TEST_PASS
+        )).thenThrow(new RuntimeException("RefData service error"));
+
+        IdamAuthTokenGenerationException exception = assertThrows(
+            IdamAuthTokenGenerationException.class,
+            () -> idamTokenGenerator.generateRefDataToken()
+        );
+
+        assertTrue(exception.getMessage().contains("Unable to generate IDAM token"));
+        verify(parameterResolver).getClientId();
+        verify(parameterResolver).getClientSecret();
+        verify(parameterResolver).getRedirectUrl();
+        verify(parameterResolver).getUsername();
+        verify(parameterResolver).getPassword();
+        verify(idamClient).getRefDataToken(
+            TEST_CLIENT_ID,
+            TEST_CLIENT_SECRET,
+            null,
+            IdamTokenGenerator.REF_DATA_GRANT_TYPE,
+            IdamTokenGenerator.REF_DATA_SCOPE,
+            TEST_USER,
+            TEST_PASS
+        );
+    }
+
 }
