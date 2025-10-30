@@ -3,6 +3,7 @@ package uk.gov.hmcts.reform.laubackend.eud.response;
 import com.fasterxml.jackson.annotation.JsonAlias;
 import io.swagger.v3.oas.annotations.media.Schema;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
@@ -26,7 +27,8 @@ public record IdamUserResponse(
     @JsonAlias("roleNames")
     List<String> roles
 ) implements Serializable {
-    private static final long serialVersionUID = 432973389L;
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     public static IdamUserResponse empty() {
         return new IdamUserResponse(null, null, null, null, null);

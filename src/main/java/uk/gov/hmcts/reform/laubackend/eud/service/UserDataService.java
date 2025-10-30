@@ -36,7 +36,7 @@ public class UserDataService {
     static final String REF_DATA = "refdata";
 
     public UserDataResponse getUserData(final UserDataGetRequestParams params) {
-        boolean hasUserId = params.getUserId() != null && !params.getUserId().trim().isEmpty();
+        boolean hasUserId = params.getUserId() != null;
 
         String idamToken = idamTokenGenerator.generateIdamToken();
         String refDataToken = idamTokenGenerator.generateRefDataToken();
@@ -46,15 +46,13 @@ public class UserDataService {
         CompletableFuture<CallResult<OrganisationResponse>> refDataF;
 
         if (hasUserId) {
-            final String userId = params.getUserId().trim();
+            final String userId = params.getUserId();
             idamF    = callAsync(IDAM, () -> idamClient.getUserDataByUserId(idamToken, userId), executor);
             refDataF = callAsync(REF_DATA,() -> refDataClient.getOrganisationDetailsByUserId(
                 refDataToken, serviceToken, userId), executor);
 
         } else {
-            final String email = params.getEmail() == null ? "" : params.getEmail().trim();
-
-            idamF = callAsync(IDAM,    () -> idamClient.getUserDataByEmail(idamToken, email), executor);
+            idamF = callAsync(IDAM,    () -> idamClient.getUserDataByEmail(idamToken, params.getEmail()), executor);
 
             refDataF = idamF.thenCompose(idam -> {
                 var body = idam.body;

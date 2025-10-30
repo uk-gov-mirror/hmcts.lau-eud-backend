@@ -7,7 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
-import static org.apache.commons.lang3.StringUtils.isNotEmpty;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 @Getter
 @Setter
@@ -21,7 +21,15 @@ public class UserDataGetRequestParams {
 
     @AssertTrue(message = "At least one of userId or email must be provided")
     public boolean isAtLeastOneProvided() {
-        return isNotEmpty(userId) || isNotEmpty(email);
+        return isNotBlank(userId) || isNotBlank(email);
+    }
+
+    public String getUserId() {
+        return isNotBlank(userId) ? userId.trim() : null;
+    }
+
+    public String getEmail() {
+        return isNotBlank(email) ? email.trim() : null;
     }
 }
 

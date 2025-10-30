@@ -2,6 +2,7 @@ package uk.gov.hmcts.reform.laubackend.eud.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
@@ -27,5 +28,8 @@ public record UserDataResponse(
 
     @Schema(description = "Metadata related to the user data response.")
     Map<String, Map<String, Integer>> meta
-) implements Serializable {}
+) implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
+}
 
