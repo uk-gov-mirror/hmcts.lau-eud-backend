@@ -14,8 +14,8 @@ idam:
   api:
     url: ${IDAM_API_URL:http://localhost:4554}
 
-prd:
-  organisations:
-    url: ${PRD_API_URL:http://localhost:4554}
+rd:
+  professional:
+    url: ${RD_PROFESSIONAL_API_URL:http://localhost:4554}
 
 dummy-jwt: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJsYXVfZXVkX2JhY2tlbmQiLCJleHAiOjE3NjExNDc5MzJ9.yrK05Rc5cl5mXxlHafediHLPq_IM0EwKRjAnY6sp2kwg8xh2hHuxF0xz7F2K5diwwLazy1uVyASHOB7lluO3sA

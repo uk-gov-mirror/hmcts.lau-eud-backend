@@ -85,7 +85,7 @@ public class AbstractSteps {
                            .willReturn(aResponse()
                                            .withHeader(CONTENT_TYPE_HEADER, JSON_RESPONSE)
                                            .withStatus(200)
-                                           .withBody("")));
+                                           .withBodyFile("OrganisationalAddress.json")));
 
         String jsonBody = "{ \"access_token\": \"" + GOOD_TOKEN + "\" }";
 
