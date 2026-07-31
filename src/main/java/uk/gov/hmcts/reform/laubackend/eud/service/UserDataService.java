@@ -127,6 +127,8 @@ public class UserDataService {
         return new UserDataResponse(
             idamUserData.userId(),
             idamUserData.email(),
+            idamUserData.forename(),
+            idamUserData.surname(),
             idamUserData.accountStatus(),
             idamUserData.recordType(),
             idamUserData.accountCreationDate(),

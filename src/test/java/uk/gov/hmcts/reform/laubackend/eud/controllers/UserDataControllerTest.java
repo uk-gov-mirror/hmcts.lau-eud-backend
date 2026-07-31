@@ -50,6 +50,8 @@ class UserDataControllerTest {
         UserDataResponse expectedResponse = new UserDataResponse(
             USER_ID,
             "test@test.com",
+            "Test",
+            "User",
             "ACTIVE",
             null,
             null,

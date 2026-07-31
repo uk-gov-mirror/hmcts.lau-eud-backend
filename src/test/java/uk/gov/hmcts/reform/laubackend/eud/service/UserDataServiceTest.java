@@ -68,6 +68,8 @@ class UserDataServiceTest {
 
     private String userId = "99999";
     private String email = "test@example.com";
+    private String forename = "Test";
+    private String surname = "User";
     private UserDataGetRequestParams params;
 
     @BeforeEach
@@ -102,6 +104,8 @@ class UserDataServiceTest {
         UserDataResponse expectedAggregated = new UserDataResponse(
             userId,
             email,
+            forename,
+            surname,
             ACTIVE,
             RECORD_TYPE,
             null,
@@ -148,6 +152,8 @@ class UserDataServiceTest {
         UserDataResponse expectedAggregated = new UserDataResponse(
             "14567",
             email,
+            forename,
+            surname,
             ACTIVE,
             RECORD_TYPE,
             null,

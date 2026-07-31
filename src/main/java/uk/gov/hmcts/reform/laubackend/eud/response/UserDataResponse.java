@@ -14,6 +14,12 @@ public record UserDataResponse(
     @Schema(description = "Email address/username of the user.")
     String email,
 
+    @Schema(description = "Forename of the user.")
+    String forename,
+
+    @Schema(description = "Surname of the user.")
+    String surname,
+
     @Schema(description = "Account Status of user")
     String accountStatus,
 
