@@ -182,7 +182,7 @@ dependencies {
   implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:3.1.0"
   implementation "org.springframework.cloud:spring-cloud-starter-openfeign"
   implementation "com.github.hmcts:idam-java-client:4.0.0"
-  implementation "com.github.hmcts:service-auth-provider-java-client:6.0.1"
+  implementation "com.github.hmcts:service-auth-provider-java-client:6.1.0"
   implementation "com.github.hmcts.java-logging:logging:8.0.0"
   implementation "org.apache.commons:commons-lang3:3.20.0"
   implementation "org.apache.logging.log4j:log4j-api:${versions.log4j}"
